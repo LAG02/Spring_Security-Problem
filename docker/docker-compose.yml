@@ -1,0 +1,39 @@
+version: '3'
+
+services:
+  ppgadmin:
+    container_name: pgadmin
+    image: dpage/pgadmin4:4.21
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@admin.ch
+      - PGADMIN_DEFAULT_PASSWORD=admin
+    ports:
+      - "5050:80"
+    networks:
+      - webshop
+    volumes:
+      - pgadmin-data:/root/.pgadmin
+    depends_on:
+      - postgres
+
+  postgres:
+    container_name: postgres
+    image: postgres:12-alpine
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=admin
+      - POSTGRES_DB=webshop
+    ports:
+      - "5432:5432"
+    networks:
+      - webshop
+    volumes:
+      - postgres-db:/var/lib/postgresql/data
+
+networks:
+  webshop:
+    driver: bridge
+
+volumes:
+  postgres-db:
+  pgadmin-data:
